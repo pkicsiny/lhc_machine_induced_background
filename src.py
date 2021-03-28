@@ -2,16 +2,17 @@ import numpy as np
 from ipywidgets import interact, IntSlider
 
 
-def readH5Data(hf_files_list, disc_list=[4, -4], ring_list=[1, 1], group_name='Tof_q'):
+def readH5Data(hf_files_list, disc_list=[4, 4], ring_list=[1, 1], group_name='Tof_q', row_size=2):
     """
     Reads hdf5 data from a list of files. 
     Reads specific datasets only, defined by disc_list and ring_list.
-    Optimized for hdf5 files with dataspace shape of (N, 2) corresponding to time of flight - charge.
+    Optimized for hdf5 files with dataspace shape of (N, row_size) corresponding to time of flight - charge.
     The lists hf_files_list, disc_list and ring_list must have the same length.
     :param hf_files_list: list of h5py._hl.files.File types. Hdf5 files to read.
-    :param disc_list: list of integers specifying TEPX discs
-    :param ring_list: list of integers specifying TEPX rings
-    :param group_name: string, hdff5 group name to read
+    :param disc_list: list of integers or list of lists of integers specifying TEPX discs
+    :param ring_list: list of integers or list of lists of integers specifying TEPX rings
+    :param group_name: string, hdf5 group name to read
+    :param row_size: int, size of one data tuple in the hdf5
     :return:
         hf_sets: list of numpy arrays of shape (N, 2) where N is the number of tof-Q entriy pairs.
     """
@@ -31,31 +32,41 @@ def readH5Data(hf_files_list, disc_list=[4, -4], ring_list=[1, 1], group_name='T
             hf_file = [hf_file]
         
         # init data container
-        hf_dset = np.empty((0,2))
+        hf_dset = np.empty((0,row_size))
             
         # loop over listified list of file(s)
         for hfile in hf_file:
-        
+            
+            print("Reading: {}".format(hfile))
+                
             #get data group
             hf_group = hfile.get(group_name)
-    
-            # init data key
-            disc_ring = "d{}r{}".format(disc, ring)
-    
-            # [0, 0] entries are empty, and are there just because of the placeholder, need to be deleted
-            for key in hf_group.keys():
-                
-                # get right key
-                if disc_ring in key:
-                    hf_ptype = hf_group.get(key)
+            
+            # loop over discs and rings that need to be read
+            if type(disc) != list:
+                disc = [disc]
+            if type(ring) != list:
+                ring = [ring]
+            for d in disc:
+                for r in ring:
                     
-                    # check if data is empty else read it and append to dset
-                    if hf_ptype[:].shape == (1,2) and all(i == 0 for i in hf_ptype[0]):
-                        print("    0 entries for {}".format(key))
-                        continue
-                    else:
-                        print("    {} entries for {}".format(len(hf_ptype[:]), key))
-                        hf_dset = np.vstack((hf_dset, hf_ptype[:]))
+                    # init data key
+                    disc_ring = "d{}r{}".format(d, r)
+    
+                    # [0, 0] entries are empty, and are there just because of the placeholder, need to be deleted
+                    for key in hf_group.keys():
+                
+                        # get right key
+                        if disc_ring in key:
+                            hf_ptype = hf_group.get(key)
+                    
+                            # check if data is empty else read it and append to dset
+                            if hf_ptype[:].shape == (1,2) and all(i == 0 for i in hf_ptype[0]):
+                                print("    0 entries for {}".format(key))
+                                continue
+                            else:
+                                print("    {} entries for {}".format(len(hf_ptype[:]), key))
+                                hf_dset = np.vstack((hf_dset, hf_ptype[:]))
                 
         print("Number of entries read: ", len(hf_dset))
         hf_dsets.append(hf_dset)
@@ -63,9 +74,9 @@ def readH5Data(hf_files_list, disc_list=[4, -4], ring_list=[1, 1], group_name='T
     return hf_dsets
 
 
-def binH5Data(hf_dset, n_bins=100, chunk_size=10, tof_scaling=1e-9, q_scaling=1, q_threshold=1000, shift_n_times=0, shift_offset=0, xedges=None, yedges=None, epsilon=1e-8, verbose=True):
+def binH5Data(hf_dset, n_bins=100, chunk_size=10, tof_scaling=1, q_scaling=1, q_threshold=0, shift_n_times=0, shift_offset=0, xedges=None, yedges=None, epsilon=1e-8, verbose=True):
     """
-    Bins data for 2D histogramming.
+    Bins data into a 2D array.
     :param hf_dset: numpy array of size(N, 2) where N is the number of tof-Q entry pairs.
     :param chunk_size: int, the data will be read and pre-processed in chunks to save memory.
     :param tof_scaling: float, scaling on the horizontal axis e.g. from units of nanoseconds to seconds use 1e-9
@@ -421,7 +432,7 @@ def getSingleCellMaskValue(left, right, top, bottom, xmin, xmax, ymin, ymax,
     cell_mask_value = 0
 
     #line segment does not cross cell
-    if not left.all() and not right.all() and not top.all() and not bottom.all():
+    if (None in left) and (None in right) and (None in top) and (None in bottom):
         if verbose:
             print("getSingleCellMaskValue: curve segment ({}, {})-({}, {}) does not cross (sub)cell".format(p1x, p1y, p2x, p2y))
         
@@ -456,7 +467,7 @@ def getSingleCellMaskValue(left, right, top, bottom, xmin, xmax, ymin, ymax,
             print("getSingleCellMaskValue: curve segment ({}, {})-({}, {}) crosses (sub)cell".format(p1x, p1y, p2x, p2y))
         
         #bottom in right out
-        if bottom.all() and right.all():
+        if (None not in bottom) and (None not in right):
             if verbose:
                 print("getSingleCellMaskValue: bottom in right out")
             
@@ -464,7 +475,7 @@ def getSingleCellMaskValue(left, right, top, bottom, xmin, xmax, ymin, ymax,
             area_below_curve = round((xmax - bottom[0])*(right[1] - ymin)/2, num_precision)
             
         #bottom in top out
-        if bottom.all() and top.all():
+        if (None not in bottom) and (None not in top):
             if verbose:
                 print("getSingleCellMaskValue: bottom in top out")
             
@@ -472,7 +483,7 @@ def getSingleCellMaskValue(left, right, top, bottom, xmin, xmax, ymin, ymax,
             area_below_curve = round((ymax - ymin)*(2*xmax - bottom[0] - top[0])/2, num_precision)
             
         #left in right out
-        if left.all() and right.all():
+        if (None not in left) and (None not in right):
             if verbose:
                 print("getSingleCellMaskValue: left in right out")
             
@@ -480,7 +491,7 @@ def getSingleCellMaskValue(left, right, top, bottom, xmin, xmax, ymin, ymax,
             area_below_curve = round((xmax - xmin)*(left[1] + right[1] - 2*ymin)/2, num_precision)
             
         #left in top out
-        if left.all() and top.all():
+        if (None not in left) and (None not in top):
             if verbose:
                 print("getSingleCellMaskValue: left in top out")
             
