@@ -7,6 +7,7 @@ The hdf5 files have the following data structure: <br>
 - group: Tof_q <br>
 - datasets: dXrY, where X is the TEPX disc ID ((-4)-4) and Y is the TEPX ring ID (1-5) <br>
 
+Each dataset consists of rows of size 2, containing time of flight [ns] - charge [GeV or e-] pairs. <br>
 The hdf5 files together with the standard ROOT simulation outputs are located on lxplus EOS at: <br>
 `/eos/cms/store/group/dpg_bril/comm_bril/phase2-sim`
 
@@ -30,10 +31,9 @@ The directory `full_stat_simhit` contains the main simulation results with the f
 The number of events launched are indicated in brackets. Simulations are always split into multiple jobs (10 events/job for PU and 5000 events for BIB) and submitted to lxbatch. <br>
 
 For BIB the setting beam 1 was used. This means that the BIB particles come from the +Z side from the interface plane between the LHC long straight section and the CMS cavern, at Z=2260 cm. Shower will be produced on the -Z side due to interactions with the CMS detector material, therefore TEPX discs on the negative side will have a larger number of hits. We are interested in the incoming BIB not the shower, so take disc 4 that is on the +Z side and is reached first by the BIB particles and therefore has negative time of flight values (~(-8.5) ns). For PU samples both disc 4 and -4 have a similar number of hits as the CMS geometry is symmetric. <br>
-<p align="center">
-
+<div align="center">
 <img src="images/LHC.png" width="500" align="center">
-</p>
+</div>
 ([source](https://sviret.web.cern.ch/sviret/Images/CMS/MIB/MIB/Welcome.php?n=Work.Gen))
 
 
@@ -87,6 +87,6 @@ The detailed workflow is described in the following:
 
 __1) Read hdf5 files__
 
-The data is read using the [`src.readH5Data()`](https://gitlab.cern.ch/pkicsiny/mib_rates/-/blob/master/src.py#L5) method. This method reads specific datasets from specific groups in the hdf5 files only, that are defined by the `disc_list`, `ring_list` and `group_name` parameters. In the default case, the hdf5 files contain only one group, named _Tof_q_
+The data is read using the [`src.readH5Data()`](https://gitlab.cern.ch/pkicsiny/mib_rates/-/blob/master/src.py#L5) method. This method reads specific datasets from specific groups in the hdf5 files `hf_files_list` only, that are defined by the `disc_list`, `ring_list` and `group_name` parameters. In the default case, the hdf5 files contain only one group, named _Tof_q_. The list of discs and rings to read have to be specified one by one for each input hdf5 file, as a list of lists i.e. the lists `hf_files_list`, `disc_list` and `ring_list` have to have the same length. The method returns a list of numpy arrays of shape (N, 2) where N is the number of tof-Q entriy pairs read from the hdf5 files.
 
 
