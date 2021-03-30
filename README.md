@@ -51,7 +51,7 @@ The simulated timewalk curve is shifted by a 25 ns offset and the area between t
 
 The following input parameters can be set in the notebook:
 
-`chunk_size`: _int_, reads hdf5 data row by row in chunks of this size. (default: 1000)
+`chunk_size`: _int_, bins hdf5 data row by row in chunks of this size into 2D histograms. (default: 1000)
 
 `n_bins`: _int_, number of bins in 2D histogram. Same along both axes. This allows the loaded hdf5 data to be binned arbitrarily. (default: 100)
 
@@ -88,7 +88,7 @@ The detailed workflow is described in the following:
 __1) Read hdf5 files__
 
 The data is read using the [`src.readH5Data()`](https://gitlab.cern.ch/pkicsiny/mib_rates/-/blob/master/src.py#L5) method. This method reads specific datasets from specific groups in the hdf5 files `hf_files_list` only, that are defined by the `disc_list`, `ring_list` and `group_name` parameters. In the default case, the hdf5 files contain only one group, named _Tof_q_. The list of discs and rings to read have to be specified one by one for each input hdf5 file, as a list of lists. This means the lists `hf_files_list`, `disc_list` and `ring_list` must have the same length. The method returns a list of numpy arrays of shape (N, 2) where N is the number of tof-Q entriy pairs read from the hdf5 files. <br>
-These 2D arrays are trimmed by using the maximum charge and time value cuts, defined in the inputs. The data are then binned into 2D histograms using `xedges_global` and `yedges_global` as bins and the [`binH5Data()`](https://gitlab.cern.ch/pkicsiny/mib_rates/-/blob/master/src.py#L77) method.
+These 2D arrays are trimmed by using the maximum charge and time value cuts, defined in the inputs. The data are then binned into 2D histograms using `xedges_global` and `yedges_global` as bins and the [`src.binH5Data()`](https://gitlab.cern.ch/pkicsiny/mib_rates/-/blob/master/src.py#L77) method. The hisrogramming is performed via the [`np.histogram2d`](https://numpy.org/doc/stable/reference/generated/numpy.histogram2d.html) built-in function. The binning is done chunk-wise to increase memory efficiency and speed up execution. If `xedges_global` and `yedges_global` are not given to the method as input, the bin ranges will be determined dynamically based on the data range.
 
 __2) Prepare timewalk simulation curve__
 
