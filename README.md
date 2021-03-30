@@ -1,6 +1,6 @@
 ## Prerequisites
 
-Prerequisites can be found in the very first cell of the notebook. Most libraries can be installed locally with pip by executing the following in the notebook (given that [pip](https://pypi.org/project/pip/) is installed): <br>
+Prerequisites can be found in the very first cell of the notebook. Most libraries can be installed locally with [pip](https://pypi.org/project/pip/) by executing the following in the notebook (given that pip is installed): <br>
 
 `pip install <anything>`
 
