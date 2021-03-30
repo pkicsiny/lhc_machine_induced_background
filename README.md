@@ -1,3 +1,10 @@
+## Prerequisites
+
+Prerequisites can be found in the very first cell of the notebook. Most libraries can be installed locally with pip by executing the following in the notebook (given that [pip](https://pypi.org/project/pip/) is installed): <br>
+
+`pip install <anything>`
+
+Pyroot can be installed from [here](https://root.cern/install/).
 
 ## Data source
 The workflow uses data simulated with CMSSW version 11.2.0.pre6. <br>
