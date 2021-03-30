@@ -46,40 +46,40 @@ In the workflow, the CMS ReadOut Chip (CROC) efficiency mask (tornado mask) is o
 
 The simulated timewalk curve is shifted and mirrored against the time axis to create the tornado mask, which tells when a hit has to arrive to the chip in order to be assigned to the current bunch crossing. Here two consecutive 25 ns wide windows are used. The first one measures BIB and the second one measures collision products (used for luminosity measurement). The two masks are positioned in time such that their efficiency (fraction of data covered by the mask) is maximized.
 
-## Workflow
+## Inputs and workflow
 
 The following input parameters can be set:
 
-chunk_size: _int_, reads hdf5 data row by row in chunks of this size. (default: 1000)
+`chunk_size`: _int_, reads hdf5 data row by row in chunks of this size. (default: 1000)
 
-n_bins: _int_, number of bins in 2D histogram. Same along both axes. This allows the loaded hdf5 data to be binned arbitrarily. (default: 100)
+`n_bins`: _int_, number of bins in 2D histogram. Same along both axes. This allows the loaded hdf5 data to be binned arbitrarily. (default: 100)
 
-q_max: _int_, a higher cut on charge, given in units of [e-]. Hits with higher charges will be excluded from the histogram. Also equals to the histogram y axis maximum range. (default: 100000)
+`q_max`: _int_, a higher cut on charge, given in units of [e-]. Hits with higher charges will be excluded from the histogram. Also equals to the histogram y axis maximum range. (default: 100000)
 
-tof_max: _int_, a higher cut on time of flight, given in units of [ns]. Hits with higher time of flight will be excluded from the histogram. Also equals to the histogram x axis maximum range. (default: 80)
+`tof_max`: _int_, a higher cut on time of flight, given in units of [ns]. Hits with higher time of flight will be excluded from the histogram. Also equals to the histogram x axis maximum range. (default: 80)
 
-tof_scaling: _float_, scaling factor for the time of flight values (e.g. from [ns] to [s]). By default the hdf5 data is in [ns], so this parameter is set to 1. (default: 1)
+`tof_scaling`: _float_, scaling factor for the time of flight values (e.g. from [ns] to [s]). By default the hdf5 data is in [ns], so this parameter is set to 1. (default: 1)
 
-q_scaling = _float_, scaling factor for the charge values (e.g. from [GeV] to [e-]). by default the hdf5 data is in [GeV], so this parameter is set to 1e9/3.61 (3.6eV / e- in Si) to convert it to electron charges. (default: 1e9/3.61)
+`q_scaling`: _float_, scaling factor for the charge values (e.g. from [GeV] to [e-]). by default the hdf5 data is in [GeV], so this parameter is set to 1e9/3.61 (3.6eV / e- in Si) to convert it to electron charges. (default: 1e9/3.61)
 
-q_threshold = _float_, lower threshold for charge values. Data will be split at this value and lower charges will be filled into a separate histogram. Does not affect y axis range which is set to 0 by default. (default: 1000)
+`q_threshold`: _float_, lower threshold for charge values. Data will be split at this value and lower charges will be filled into a separate histogram. Does not affect y axis range which is set to 0 by default. (default: 1000)
 
-shift_n_times: _int_, duplicates the whole data distribution this many times by shifting along the time axis in both directions (e.g. once to the left and once to the right to have altogether 3 copies, if the parameter is set to 1). (default: 0)
+`shift_n_times`: _int_, duplicates the whole data distribution this many times by shifting along the time axis in both directions (e.g. once to the left and once to the right to have altogether 3 copies, if the parameter is set to 1). (default: 0)
 
-shift_offset: _float_, magnitude of the offset, set by the previous parameter, in units of [ns]. (default: 25)
+`shift_offset`: _float_, magnitude of the offset, set by the previous parameter, in units of [ns]. (default: 25)
 
-verbose: _bool_, print verbose information. (default: False)
+`verbose`: _bool_, print verbose information. (default: False)
 
-mask_xwidth: _float_, width of tornado mask in [ns]. (default: 25)
+`mask_xwidth`: _float_, width of tornado mask in [ns]. (default: 25)
 
-mask_xoffset: _float_, initial offset of tornado mask along time axis. This parameter is only used to align the mask to the middle of the data bin range (e.g. chosen such that the whole mask is visible inside the [-20, 80] ns range which is used for generating the BRIL TDR plots). (default: 36-0.9113)
+`mask_xoffset`: _float_, initial offset of tornado mask along time axis. This parameter is only used to align the mask to the middle of the data bin range (e.g. chosen such that the whole mask is visible inside the [-20, 80] ns range which is used for generating the BRIL TDR plots). (default: 36-0.9113)
 
-mask_xscale: _float_, scale tornado mask along x axis. Used to mirror the mask against time. (default: -1)
+`mask_xscale`: _float_, scale tornado mask along x axis. Used to mirror the mask against time. (default: -1)
 
-num_precision: _int_, use this many digits for mask bin cell value calculations. Used to prevent errors due to numerical precision. (default: 8)
+`num_precision`: _int_, use this many digits for mask bin cell value calculations. Used to prevent errors due to numerical precision. (default: 8)
 
-epsilon: _float_, used for the same purpose as the previous parameter. Used in the denominator to avoid division by 0. (default: 1e-8)
+`epsilon`: _float_, used for the same purpose as the previous parameter. Used in the denominator to avoid division by 0. (default: 1e-8)
 
-remote_path: _string_, relative path to remote directory containing the hdf5 files. From a local machine it can be accessed via [sshfs](https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh). (default: "../../../sshfs/pu_simulations_fullgeo/hdf5/full_stat_pu1_digi_simhit")
+`remote_path`: _string_, relative path to remote directory containing the hdf5 files. From a local machine it can be accessed via [sshfs](https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh). (default: "../../../sshfs/pu_simulations_fullgeo/hdf5/full_stat_pu1_digi_simhit")
 
 
