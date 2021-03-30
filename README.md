@@ -41,5 +41,8 @@ In the workflow, the CMS ReadOut Chip (CROC) efficiency mask (tornado mask) is o
 </p>
 ([source](https://indico.cern.ch/event/818375/contributions/3430925/attachments/1844903/3026483/TrackerWeek_LateHitAnalysis.pdf))
 
-The simulated timewalk curve is shifted and mirrored against the time axis to create the tornado mask, which tells when the hit has to be detected in order to be assigned to the current bunch crossing window.
+The simulated timewalk curve is shifted and mirrored against the time axis to create the tornado mask, which tells when the hit has to be detected by the chip in order to be assigned to the current bunch crossing. Two consecutive 25 ns wide windows are used. The first one measures BIB and the second one measures collision products (used for luminosity measurement).
+
+## Workflow
+
 
