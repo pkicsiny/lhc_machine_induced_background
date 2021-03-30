@@ -8,7 +8,7 @@ Pyroot can be installed from [here](https://root.cern/install/).
 
 ## Data source
 The workflow uses data simulated with CMSSW version 11.2.0.pre6. <br>
-Simulation outputs are saved in hdf5 files and no ROOT files are involved in the process. <br>
+Simulation outputs are saved in hdf5 files and no ROOT files are involved in the analysis. <br>
 The hdf5 files have the following data structure: <br>
 
 - group: Tof_q <br>
