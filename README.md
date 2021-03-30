@@ -1,4 +1,4 @@
-# Source code for TEPX Beam Induced Background (BIB) timing studies.
+## Data sourcen and context
 
 The workflow uses data simulated with CMSSW version 11.2.0.pre6. <br>
 Simulation outputs are saved in hdf5 files and no ROOT files are involved in the process. <br>
