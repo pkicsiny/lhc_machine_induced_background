@@ -30,3 +30,4 @@ The directory `full_stat_simhit` contains the main simulation results with the f
 The number of events launched are indicated in brackets. Simulations are always split into multiple jobs (10 events/job for PU and 5000 events for BIB) and submitted to lxbatch. <br>
 
 
+
