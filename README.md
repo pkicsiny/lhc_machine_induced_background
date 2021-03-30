@@ -1,4 +1,3 @@
-
 ## Data source
 
 The workflow uses data simulated with CMSSW version 11.2.0.pre6. <br>
@@ -46,7 +45,7 @@ In the workflow, the CMS ReadOut Chip (CROC) efficiency mask (tornado mask) is o
 </div>
 ([source](https://indico.cern.ch/event/818375/contributions/3430925/attachments/1844903/3026483/TrackerWeek_LateHitAnalysis.pdf))
 
-The simulated timewalk curve is shifted by a 25 ns offset and the area between the two curves is referred to as tornado mask or chip efficiency mask. This is also mirrored against the time axis, which then results in a mask that tells when a hit has to arrive to the chip in order to be assigned to the current bunch crossing. In this study, two such masks are used that follow each other in 25 ns. The first one lookas at BIB and the second one loos at collision products which will be used for luminosity measurement. The goal of this study is to position these masks in time such that their efficiency (fraction of data covered by the mask) is maximized in order to show that an optimal timing configuration of the CROC is achievable, where BIB and luminosity can both be measured online with high efficiency.
+The simulated timewalk curve is shifted by a 25 ns offset and the area between the two curves is referred to as tornado mask or chip efficiency mask. This is also mirrored against the time axis, which then results in a mask that tells when a hit has to arrive to the chip in order to be assigned to the current bunch crossing. In this study, two such masks are used that follow each other in 25 ns. The first one looks at BIB and the second one looks at collision products which will be used for luminosity measurement. The goal of this study is to position these masks in time such that their efficiency (fraction of data covered by the mask) is maximized in order to show that an optimal timing configuration of the CROC is achievable, where BIB and luminosity can both be measured online with high efficiency.
 
 ## Inputs and workflow
 
